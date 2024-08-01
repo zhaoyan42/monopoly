@@ -7,6 +7,8 @@ import { CountryChain } from './model/CountryChain.ts';
 import styled from 'styled-components';
 import { useImmer } from 'use-immer';
 
+import { useConfirm } from './components/useConfirm.tsx';
+
 const BoardWrapper = styled('div')`
   flex-grow: 1;
   height: 0;
@@ -27,6 +29,8 @@ export function Board() {
 
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
 
+  const { confirm, ConfirmComponent } = useConfirm();
+
   function getPlayers(country: Country) {
     return players.filter((player) => player.country === country);
   }
@@ -42,34 +46,47 @@ export function Board() {
 
     const targetCountry = countryChain.getTargetCountry(
       currentPlayer.country,
-      1,
+      steps,
     );
     setPlayers((draft) => {
       draft[currentPlayerIndex].country = targetCountry;
     });
     setCurrentPlayerIndex((index) => (index + 1) % players.length);
+
+    const result = await confirm({
+      content: '你想要买下' + targetCountry.name + '吗?',
+      confirmText: '购买',
+      cancelText: '不要',
+    });
+
+    console.log(result);
   }
 
   return (
-    <BoardWrapper onClick={roll}>
-      {Array(9)
-        .fill(0)
-        .flatMap((_, y) =>
-          Array(16)
-            .fill(0)
-            .map((_, x) => {
-              const country = worldMap.getCountry(x, y);
-              return country ? (
-                <CountrySquare
-                  key={`${y}-${x}`}
-                  country={country}
-                  players={getPlayers(country)}
-                />
-              ) : (
-                <EmptySquare key={`${y}-${x}`}></EmptySquare>
-              );
-            }),
-        )}
-    </BoardWrapper>
+    <>
+      <BoardWrapper onClick={roll}>
+        {Array(9)
+          .fill(0)
+          .flatMap((_, y) =>
+            Array(16)
+              .fill(0)
+              .map((_, x) => {
+                const country = worldMap.getCountry(x, y);
+                return country ? (
+                  <CountrySquare
+                    key={`${y}-${x}`}
+                    country={country}
+                    players={getPlayers(country)}
+                  />
+                ) : (
+                  <EmptySquare key={`${y}-${x}`}></EmptySquare>
+                );
+              }),
+          )}
+      </BoardWrapper>
+      <ConfirmComponent confirmText="Yes" cancelText="No">
+        Are you sure you want to delete this item?
+      </ConfirmComponent>
+    </>
   );
 }
