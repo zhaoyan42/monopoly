@@ -8,7 +8,6 @@ export class WorldMap {
       this.positionMap[y] = [];
       for (let x = 0; x < 16; x++) {
         const country = countries?.[x + y * 16];
-        console.log(country, x + y * 16, x, y);
         this.positionMap[y].push(country || null);
       }
     }
