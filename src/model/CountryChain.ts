@@ -1,17 +1,25 @@
 import { Country } from './Country.ts';
 
 export class CountryChain {
-  constructor(private chain: Country[]) {}
+  constructor(private countries: Country[]) {}
 
   getNextCountry(country: Country) {
-    const index = this.chain.findIndex((c) => c.name === country.name);
+    const index = this.countries.findIndex((c) => c.name === country.name);
     if (index === -1) {
       throw new Error('Country not found');
     }
-    if (index + 1 === this.chain.length) {
-      return this.chain[0];
+    if (index + 1 === this.countries.length) {
+      return this.countries[0];
     } else {
-      return this.chain[index + 1];
+      return this.countries[index + 1];
     }
+  }
+
+  getTargetCountry(country: Country, steps: number) {
+    let nextCountry = country;
+    for (let i = 0; i < steps; i++) {
+      nextCountry = this.getNextCountry(nextCountry);
+    }
+    return nextCountry;
   }
 }

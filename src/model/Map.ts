@@ -3,7 +3,7 @@ import { Country } from './Country.ts';
 export class WorldMap {
   private positionMap: (Country | null)[][] = [];
 
-  constructor(private countries: Country[]) {
+  constructor(countries: Country[]) {
     for (let y = 0; y < 9; y++) {
       this.positionMap[y] = [];
       for (let x = 0; x < 16; x++) {
