@@ -9,8 +9,13 @@ import { useImmer } from 'use-immer';
 
 import { useConfirm } from './hooks/useConfirm.tsx';
 import { useOwnedCountriesStore } from './store/ownedCountriesStore.ts';
-import { getCountryPrice, getPassagePrice } from './model/CountryPriceMap.ts';
 import { useAlert } from './hooks/useAlert.tsx';
+import {
+  createPurchaseAlertContent,
+  createOwnAlertContent,
+  createRentAlertContent,
+  createConfirmContent,
+} from './utils/contentFactory.tsx';
 
 const BoardWrapper = styled('div')`
   flex-grow: 1;
@@ -62,35 +67,14 @@ export function Board() {
     if (!isCountryPurchased(targetCountry)) {
       if (
         await confirm({
-          content: (
-            <div>
-              <p>
-                你想要以${getCountryPrice(targetCountry, 0)}的价格买下
-                <span style={{ color: '#FF0000' }}>
-                  {targetCountry.name}
-                </span>{' '}
-                吗?
-              </p>
-            </div>
-          ),
+          content: createConfirmContent(targetCountry),
           confirmText: '购买',
           cancelText: '不要',
         })
       ) {
         purchaseCountry(currentPlayer, targetCountry);
         alert({
-          content: (
-            <div>
-              <p>
-                <span style={{ color: currentPlayer.color }}>玩家</span>已经以
-                <span style={{ color: '#00FF00' }}>
-                  ${getCountryPrice(targetCountry, 0)}
-                </span>
-                的价格购买了
-                <span style={{ color: '#FF0000' }}>{targetCountry.name}</span>
-              </p>
-            </div>
-          ),
+          content: createPurchaseAlertContent(currentPlayer, targetCountry),
         });
       } else {
         console.log(
@@ -103,30 +87,12 @@ export function Board() {
       if (!owner) throw new Error('Country should have an owner');
       if (owner === currentPlayer) {
         alert({
-          content: (
-            <div>
-              <p>
-                <span style={{ color: currentPlayer.color }}>玩家</span>自己拥有
-                <span style={{ color: '#FF0000' }}>{targetCountry.name}</span>
-              </p>
-            </div>
-          ),
+          content: createOwnAlertContent(currentPlayer, targetCountry),
         });
         return;
       }
       alert({
-        content: (
-          <div>
-            <p>
-              <span style={{ color: currentPlayer.color }}>玩家</span>需要支付
-              <span style={{ color: '#FF0000' }}>
-                ${getPassagePrice(targetCountry, 0)}
-              </span>
-              的租金给
-              <span style={{ color: owner.color }}>玩家</span>
-            </p>
-          </div>
-        ),
+        content: createRentAlertContent(currentPlayer, targetCountry, owner),
       });
     }
   }
