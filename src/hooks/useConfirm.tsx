@@ -1,4 +1,4 @@
-import { useCallback } from 'react';
+import { ReactNode, useCallback } from 'react';
 import { Confirm } from '../components/Confirm.tsx';
 import { useConfirmStore } from '../store/confirmStore.ts';
 
@@ -11,7 +11,7 @@ export function useConfirm() {
       confirmText,
       cancelText,
     }: {
-      content: string;
+      content: ReactNode;
       confirmText: string;
       cancelText: string;
     }) => {

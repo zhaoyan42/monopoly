@@ -15,32 +15,39 @@ const Overlay = styled('div')<{ $visible: boolean }>`
 
 const DialogWrapper = styled('div')`
   background-color: #ffffff;
-  padding: 16px;
-  border-radius: 8px;
+  padding: 24px;
+  border-radius: 12px;
+  max-width: 90%;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
 const DialogCard = styled('div')`
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 24px;
 `;
 
 const Actions = styled('div')`
   display: flex;
-  gap: 8px;
+  gap: 16px;
+  justify-content: center;
 `;
 
-const Button = styled('button')`
-  padding: 8px 16px;
-  border-radius: 4px;
+const Button = styled('button')<{ $primary?: boolean }>`
+  padding: 16px 24px;
+  border-radius: 8px;
   border: none;
-  background-color: #000000;
-  color: #ffffff;
+  background-color: ${({ $primary }) => ($primary ? '#000000' : '#cccccc')};
+  color: ${({ $primary }) => ($primary ? '#ffffff' : '#000000')};
+  font-size: 18px;
   cursor: pointer;
+  flex-grow: 1;
+  text-align: center;
 `;
 
 const ContentWrapper = styled('div')`
-  font-size: 16px;
+  font-size: 18px;
+  text-align: center;
 `;
 
 export function Confirm({
@@ -64,7 +71,9 @@ export function Confirm({
         <DialogCard>
           <ContentWrapper>{children}</ContentWrapper>
           <Actions>
-            <Button onClick={onConfirm}>{confirmText}</Button>
+            <Button $primary={true} onClick={onConfirm}>
+              {confirmText}
+            </Button>
             <Button onClick={onCancel}>{cancelText}</Button>
           </Actions>
         </DialogCard>

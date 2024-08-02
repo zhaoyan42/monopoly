@@ -1,16 +1,17 @@
 import { create } from 'zustand';
+import { ReactNode } from 'react';
 
 interface ConfirmState {
   visible: boolean;
   options: {
-    content: string;
+    content: ReactNode;
     confirmText: string;
     cancelText: string;
     resolve?: (value: boolean) => void;
   };
   setVisible: (visible: boolean) => void;
   setOptions: (options: {
-    content: string;
+    content: ReactNode;
     confirmText: string;
     cancelText: string;
     resolve?: (value: boolean) => void;
