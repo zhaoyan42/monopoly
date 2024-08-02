@@ -29,7 +29,7 @@ export function Board() {
 
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
 
-  const { confirm, ConfirmComponent } = useConfirm();
+  const { confirm } = useConfirm();
 
   function getPlayers(country: Country) {
     return players.filter((player) => player.country === country);
@@ -84,9 +84,6 @@ export function Board() {
               }),
           )}
       </BoardWrapper>
-      <ConfirmComponent confirmText="Yes" cancelText="No">
-        Are you sure you want to delete this item?
-      </ConfirmComponent>
     </>
   );
 }

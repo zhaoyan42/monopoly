@@ -1,6 +1,7 @@
 import './App.css';
 import styled from 'styled-components';
 import { Board } from './Board.tsx';
+import { useConfirm } from './components/useConfirm.tsx';
 
 const GameWrapper = styled('div')`
   height: 100%;
@@ -10,10 +11,15 @@ const GameWrapper = styled('div')`
 `;
 
 function App() {
+  const { ConfirmComponent } = useConfirm();
+
   return (
-    <GameWrapper>
-      <Board></Board>
-    </GameWrapper>
+    <>
+      <GameWrapper>
+        <Board></Board>
+      </GameWrapper>
+      <ConfirmComponent />
+    </>
   );
 }
 

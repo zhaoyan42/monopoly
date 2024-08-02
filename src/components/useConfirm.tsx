@@ -1,18 +1,9 @@
-import { useCallback, useState } from 'react';
+import { useCallback } from 'react';
 import { Confirm } from './Confirm';
+import { useConfirmStore } from '../store/confirmStore';
 
 export function useConfirm() {
-  const [visible, setVisible] = useState(false);
-  const [options, setOptions] = useState<{
-    content: string;
-    confirmText: string;
-    cancelText: string;
-    resolve?: (value: boolean) => void;
-  }>({
-    content: '确定吗？',
-    confirmText: '确定',
-    cancelText: '取消',
-  });
+  const { visible, options, setVisible, setOptions } = useConfirmStore();
 
   const confirm = useCallback(
     ({
@@ -29,7 +20,7 @@ export function useConfirm() {
         setVisible(true);
       });
     },
-    [],
+    [setOptions, setVisible],
   );
 
   const { content: children, confirmText, cancelText, resolve } = options;
@@ -37,12 +28,12 @@ export function useConfirm() {
   const handleConfirm = useCallback(() => {
     if (resolve) resolve(true);
     setVisible(false);
-  }, [resolve]);
+  }, [resolve, setVisible]);
 
   const handleCancel = useCallback(() => {
     if (resolve) resolve(false);
     setVisible(false);
-  }, [resolve]);
+  }, [resolve, setVisible]);
 
   const ConfirmComponent = useCallback(
     () => (
