@@ -1,7 +1,7 @@
 import './App.css';
 import styled from 'styled-components';
 import { Board } from './Board.tsx';
-import { useConfirm } from './components/useConfirm.tsx';
+import { useConfirm } from './hooks/useConfirm.tsx';
 
 const GameWrapper = styled('div')`
   height: 100%;

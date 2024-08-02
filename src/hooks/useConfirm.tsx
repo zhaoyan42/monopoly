@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
-import { Confirm } from './Confirm';
-import { useConfirmStore } from '../store/confirmStore';
+import { Confirm } from '../components/Confirm.tsx';
+import { useConfirmStore } from '../store/confirmStore.ts';
 
 export function useConfirm() {
   const { visible, options, setVisible, setOptions } = useConfirmStore();

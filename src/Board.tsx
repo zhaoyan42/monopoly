@@ -7,7 +7,7 @@ import { CountryChain } from './model/CountryChain.ts';
 import styled from 'styled-components';
 import { useImmer } from 'use-immer';
 
-import { useConfirm } from './components/useConfirm.tsx';
+import { useConfirm } from './hooks/useConfirm.tsx';
 
 const BoardWrapper = styled('div')`
   flex-grow: 1;
