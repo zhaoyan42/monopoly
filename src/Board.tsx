@@ -1,7 +1,7 @@
 import { WorldMap } from './model/Map.ts';
 import { Country, countryList } from './model/Country.ts';
 import { CountrySquare, EmptySquare } from './Square.tsx';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Player } from './model/Player.ts';
 import { CountryChain } from './model/CountryChain.ts';
 import styled from 'styled-components';
@@ -18,8 +18,8 @@ const BoardWrapper = styled('div')`
 `;
 
 export function Board() {
-  const worldMap = new WorldMap(countryList);
-  const countryChain = new CountryChain(countryList);
+  const worldMap = useRef(new WorldMap(countryList));
+  const countryChain = useRef(new CountryChain(countryList));
 
   const [players, setPlayers] = useImmer([
     new Player('#ff0000', countryList[0]),
@@ -44,7 +44,7 @@ export function Board() {
     const steps = rollDice();
     console.log(`%c${steps}`, `color: ${currentPlayer.color};`);
 
-    const targetCountry = countryChain.getTargetCountry(
+    const targetCountry = countryChain.current.getTargetCountry(
       currentPlayer.country,
       steps,
     );
@@ -71,7 +71,7 @@ export function Board() {
             Array(16)
               .fill(0)
               .map((_, x) => {
-                const country = worldMap.getCountry(x, y);
+                const country = worldMap.current.getCountry(x, y);
                 return country ? (
                   <CountrySquare
                     key={`${y}-${x}`}
