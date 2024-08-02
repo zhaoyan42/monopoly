@@ -2,6 +2,7 @@ import './App.css';
 import styled from 'styled-components';
 import { Board } from './Board.tsx';
 import { useConfirm } from './hooks/useConfirm.tsx';
+import { useAlert } from './hooks/useAlert.tsx';
 
 const GameWrapper = styled('div')`
   height: 100%;
@@ -12,6 +13,7 @@ const GameWrapper = styled('div')`
 
 function App() {
   const { ConfirmComponent } = useConfirm();
+  const { AlertComponent } = useAlert();
 
   return (
     <>
@@ -19,6 +21,7 @@ function App() {
         <Board></Board>
       </GameWrapper>
       <ConfirmComponent />
+      <AlertComponent />
     </>
   );
 }

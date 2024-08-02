@@ -4,6 +4,10 @@ export function getCountryPrice(country: Country, level: number) {
   return countryPriceMap[country.name][level];
 }
 
+export function getPassagePrice(country: Country, level: number = 0) {
+  return getCountryPrice(country, level) * 0.5;
+}
+
 export const countryPriceMap: { [key: string]: number[] } = {
   中国: [1000, 2000, 4000, 8000],
   韩国: [200, 400, 800, 1600],

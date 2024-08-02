@@ -8,8 +8,9 @@ import styled from 'styled-components';
 import { useImmer } from 'use-immer';
 
 import { useConfirm } from './hooks/useConfirm.tsx';
-import { useOwnedCountriesStore } from './store/OwnedCountriesStore.ts';
-import { getCountryPrice } from './model/CountryPriceMap.ts';
+import { useOwnedCountriesStore } from './store/ownedCountriesStore.ts';
+import { getCountryPrice, getPassagePrice } from './model/CountryPriceMap.ts';
+import { useAlert } from './hooks/useAlert.tsx';
 
 const BoardWrapper = styled('div')`
   flex-grow: 1;
@@ -32,6 +33,7 @@ export function Board() {
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
 
   const { confirm } = useConfirm();
+  const { alert } = useAlert();
   const { purchaseCountry, isCountryPurchased, getOwner } =
     useOwnedCountriesStore();
 
@@ -76,28 +78,56 @@ export function Board() {
         })
       ) {
         purchaseCountry(currentPlayer, targetCountry);
-        console.log(
-          `玩家 ${currentPlayerIndex + 1} 买下 ${targetCountry.name}`,
-        );
+        alert({
+          content: (
+            <div>
+              <p>
+                <span style={{ color: currentPlayer.color }}>玩家</span>已经以
+                <span style={{ color: '#00FF00' }}>
+                  ${getCountryPrice(targetCountry, 0)}
+                </span>
+                的价格购买了
+                <span style={{ color: '#FF0000' }}>{targetCountry.name}</span>
+              </p>
+            </div>
+          ),
+        });
       } else {
         console.log(
-          `玩家 ${currentPlayerIndex + 1} 选择不买 ${targetCountry.name}`,
+          `%c玩家 ${currentPlayer.color} 选择不买 ${targetCountry.name}`,
+          `color: ${currentPlayer.color};`,
         );
       }
     } else {
       const owner = getOwner(targetCountry);
       if (!owner) throw new Error('Country should have an owner');
       if (owner === currentPlayer) {
-        console.log(
-          `玩家 ${currentPlayerIndex + 1} 自己拥有 ${targetCountry.name}`,
-        );
+        alert({
+          content: (
+            <div>
+              <p>
+                <span style={{ color: currentPlayer.color }}>玩家</span>自己拥有
+                <span style={{ color: '#FF0000' }}>{targetCountry.name}</span>
+              </p>
+            </div>
+          ),
+        });
         return;
       }
-      console.log(
-        `玩家 ${currentPlayerIndex + 1} 需要支付租金给玩家 ${
-          players.indexOf(owner) + 1
-        }`,
-      );
+      alert({
+        content: (
+          <div>
+            <p>
+              <span style={{ color: currentPlayer.color }}>玩家</span>需要支付
+              <span style={{ color: '#FF0000' }}>
+                ${getPassagePrice(targetCountry, 0)}
+              </span>
+              的租金给
+              <span style={{ color: owner.color }}>玩家</span>
+            </p>
+          </div>
+        ),
+      });
     }
   }
 
