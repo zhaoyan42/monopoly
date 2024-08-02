@@ -7,7 +7,7 @@ export function createPurchaseAlertContent(player: Player, country: Country) {
     <div>
       <p>
         <span style={{ color: player.color }}>玩家</span>已经以
-        <span style={{ color: '#00FF00' }}>${getCountryPrice(country, 0)}</span>
+        <span style={{ color: '#FF0000' }}>${getCountryPrice(country, 0)}</span>
         的价格购买了
         <span style={{ color: '#FF0000' }}>{country.name}</span>
       </p>
@@ -47,7 +47,9 @@ export function createConfirmContent(country: Country) {
   return (
     <div>
       <p>
-        你想要以${getCountryPrice(country, 0)}的价格买下
+        你想要以
+        <span style={{ color: '#FF0000' }}>${getCountryPrice(country, 0)}</span>
+        的价格买下
         <span style={{ color: '#FF0000' }}>{country.name}</span>吗?
       </p>
     </div>

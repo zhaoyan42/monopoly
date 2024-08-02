@@ -17,12 +17,26 @@ import {
   createConfirmContent,
 } from './utils/contentFactory.tsx';
 
-const BoardWrapper = styled('div')`
+const BoardWrapper = styled('div')<{ $currentPlayerColor: string }>`
   flex-grow: 1;
   height: 0;
   display: grid;
   grid-template-columns: repeat(16, 1fr);
   grid-template-rows: repeat(9, 1fr);
+  border: 5px solid ${({ $currentPlayerColor }) => $currentPlayerColor};
+  animation: breathing 1s infinite;
+
+  @keyframes breathing {
+    0% {
+      border-color: ${({ $currentPlayerColor }) => $currentPlayerColor}00;
+    }
+    50% {
+      border-color: ${({ $currentPlayerColor }) => $currentPlayerColor}FF;
+    }
+    100% {
+      border-color: ${({ $currentPlayerColor }) => $currentPlayerColor}00;
+    }
+  }
 `;
 
 export function Board() {
@@ -62,7 +76,6 @@ export function Board() {
     setPlayers((draft) => {
       draft[currentPlayerIndex].country = targetCountry;
     });
-    setCurrentPlayerIndex((index) => (index + 1) % players.length);
 
     if (!isCountryPurchased(targetCountry)) {
       if (
@@ -89,17 +102,22 @@ export function Board() {
         alert({
           content: createOwnAlertContent(currentPlayer, targetCountry),
         });
-        return;
+      } else {
+        alert({
+          content: createRentAlertContent(currentPlayer, targetCountry, owner),
+        });
       }
-      alert({
-        content: createRentAlertContent(currentPlayer, targetCountry, owner),
-      });
     }
+
+    setCurrentPlayerIndex((index) => (index + 1) % players.length);
   }
 
   return (
     <>
-      <BoardWrapper onClick={roll}>
+      <BoardWrapper
+        onClick={roll}
+        $currentPlayerColor={players[currentPlayerIndex].color}
+      >
         {Array(9)
           .fill(0)
           .flatMap((_, y) =>
