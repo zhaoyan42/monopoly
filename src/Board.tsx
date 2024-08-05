@@ -3,7 +3,7 @@ import { Country, countryList } from './model/Country.ts';
 import { CountrySquare, EmptySquare } from './Square.tsx';
 import { useRef } from 'react';
 import { Player } from './model/Player.ts';
-import styled from 'styled-components';
+import styled, { css, keyframes } from 'styled-components';
 import { PlayerSquare } from './PlayerInfo.tsx';
 
 const BoardWrapper = styled('div')`
@@ -24,6 +24,18 @@ const RightWrapper = styled('div')`
   flex-direction: column;
 `;
 
+const breathing = (color: string) => keyframes`
+  0% {
+    border-color: rgba(${parseInt(color.slice(1, 3), 16)}, ${parseInt(color.slice(3, 5), 16)}, ${parseInt(color.slice(5, 7), 16)}, 0);
+  }
+  50% {
+    border-color: rgba(${parseInt(color.slice(1, 3), 16)}, ${parseInt(color.slice(3, 5), 16)}, ${parseInt(color.slice(5, 7), 16)}, 1);
+  }
+  100% {
+    border-color: rgba(${parseInt(color.slice(1, 3), 16)}, ${parseInt(color.slice(3, 5), 16)}, ${parseInt(color.slice(5, 7), 16)}, 0);
+  }
+`;
+
 const MapWrapper = styled('div')<{ $currentPlayerColor: string }>`
   flex-grow: 1;
   height: 0;
@@ -31,19 +43,9 @@ const MapWrapper = styled('div')<{ $currentPlayerColor: string }>`
   grid-template-columns: repeat(16, 1fr);
   grid-template-rows: repeat(9, 1fr);
   border: 5px solid ${({ $currentPlayerColor }) => $currentPlayerColor};
-  animation: breathing 1s infinite;
-
-  @keyframes breathing {
-    0% {
-      border-color: ${({ $currentPlayerColor }) => $currentPlayerColor}00;
-    }
-    50% {
-      border-color: ${({ $currentPlayerColor }) => $currentPlayerColor}FF;
-    }
-    100% {
-      border-color: ${({ $currentPlayerColor }) => $currentPlayerColor}00;
-    }
-  }
+  animation: ${({ $currentPlayerColor }) => css`
+    ${breathing($currentPlayerColor)} 1s infinite
+  `};
 `;
 
 type BoardProps = {
