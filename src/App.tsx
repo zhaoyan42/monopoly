@@ -96,8 +96,12 @@ function App() {
 
   return (
     <>
-      <GameWrapper onClick={roll}>
-        <Board players={players} currentPlayerIndex={currentPlayerIndex} />
+      <GameWrapper>
+        <Board
+          players={players}
+          currentPlayerIndex={currentPlayerIndex}
+          onClick={roll}
+        />
       </GameWrapper>
       <ConfirmComponent />
       <AlertComponent />
