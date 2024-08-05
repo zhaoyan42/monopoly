@@ -1,36 +1,49 @@
+import { create } from 'zustand';
 import { Country } from '../model/Country.ts';
 import { Player } from '../model/Player.ts';
-import { useState } from 'react';
 
-export function useOwnedCountriesStore() {
-  const [ownedCountries, setOwnedCountries] = useState<Map<Player, Country[]>>(
-    new Map(),
-  );
-
-  function getOwner(country: Country) {
-    return (
-      [...ownedCountries.entries()].find(([_, countries]) =>
-        countries.includes(country),
-      )?.[0] || null
-    );
-  }
-
-  function isCountryPurchased(country: Country) {
-    return [...ownedCountries.values()].some((countries) =>
-      countries.includes(country),
-    );
-  }
-
-  function purchaseCountry(player: Player, country: Country) {
-    setOwnedCountries((prev) => {
-      const playerCountries = prev.get(player) || [];
-      return new Map(prev).set(player, [...playerCountries, country]);
-    });
-  }
-
-  function getOwnedCountries(player: Player): Country[] {
-    return ownedCountries.get(player) || [];
-  }
-
-  return { purchaseCountry, getOwnedCountries, isCountryPurchased, getOwner };
+interface OwnedCountriesState {
+  ownedCountries: Map<Player, Country[]>;
+  getOwner: (country: Country) => Player | null;
+  isCountryPurchased: (country: Country) => boolean;
+  purchaseCountry: (player: Player, country: Country) => void;
+  getOwnedCountries: (player: Player) => Country[];
 }
+
+export const useOwnedCountriesStore = create<OwnedCountriesState>(
+  (set, get) => ({
+    ownedCountries: new Map<Player, Country[]>(),
+
+    getOwner: (country: Country) => {
+      const { ownedCountries } = get();
+      return (
+        [...ownedCountries.entries()].find(([_, countries]) =>
+          countries.includes(country),
+        )?.[0] || null
+      );
+    },
+
+    isCountryPurchased: (country: Country) => {
+      const { ownedCountries } = get();
+      return [...ownedCountries.values()].some((countries) =>
+        countries.includes(country),
+      );
+    },
+
+    purchaseCountry: (player: Player, country: Country) => {
+      set((state) => {
+        const playerCountries = state.ownedCountries.get(player) || [];
+        const newOwnedCountries = new Map(state.ownedCountries).set(player, [
+          ...playerCountries,
+          country,
+        ]);
+        return { ownedCountries: newOwnedCountries };
+      });
+    },
+
+    getOwnedCountries: (player: Player) => {
+      const { ownedCountries } = get();
+      return ownedCountries.get(player) || [];
+    },
+  }),
+);
