@@ -15,6 +15,7 @@ import {
 import { useOwnedCountriesStore } from './store/ownedCountriesStore.ts';
 import { useRef, useState } from 'react';
 import { CountryChain } from './model/CountryChain.ts';
+import { DiceRoller } from './components/DiceRoller.tsx';
 
 const GameWrapper = styled('div')`
   height: 100%;
@@ -37,23 +38,26 @@ function App() {
 
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
 
+  const [points, setPoints] = useState(0);
+  const [rolling, setRolling] = useState(false);
+
   const { confirm } = useConfirm();
   const { alert } = useAlert();
   const { purchaseCountry, isCountryPurchased, getOwner } =
     useOwnedCountriesStore();
 
   function rollDice() {
-    return Math.floor(Math.random() * 6) + 1;
+    setPoints(Math.floor(Math.random() * 6) + 1);
+    setRolling(true);
   }
 
-  async function roll() {
+  async function start() {
     const currentPlayer = players[currentPlayerIndex];
-    const steps = rollDice();
-    console.log(`%c${steps}`, `color: ${currentPlayer.color};`);
+    console.log(`%c${points}`, `color: ${currentPlayer.color};`);
 
     const targetCountry = countryChain.current.getTargetCountry(
       currentPlayer.country,
-      steps,
+      points,
     );
     setPlayers((draft) => {
       draft[currentPlayerIndex].country = targetCountry;
@@ -96,11 +100,19 @@ function App() {
 
   return (
     <>
+      <DiceRoller
+        rolling={rolling}
+        targetPoint={points}
+        onAnimationEnd={() => {
+          setRolling(false);
+          void start();
+        }}
+      ></DiceRoller>
       <GameWrapper>
         <Board
           players={players}
           currentPlayerIndex={currentPlayerIndex}
-          onClick={roll}
+          onClick={rollDice}
         />
       </GameWrapper>
       <ConfirmComponent />
