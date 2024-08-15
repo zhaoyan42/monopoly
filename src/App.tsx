@@ -100,14 +100,16 @@ function App() {
 
   return (
     <>
-      <DiceRoller
-        rolling={rolling}
-        targetPoint={points}
-        onAnimationEnd={() => {
-          setRolling(false);
-          void start();
-        }}
-      />
+      {rolling ? (
+        <DiceRoller
+          rolling={rolling}
+          targetPoint={points}
+          onAnimationEnd={() => {
+            setRolling(false);
+            void start();
+          }}
+        />
+      ) : null}
       <GameWrapper>
         <Board
           players={players}

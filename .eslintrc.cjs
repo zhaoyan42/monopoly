@@ -27,15 +27,13 @@ module.exports = {
         "args": "after-used",
         "argsIgnorePattern": "^_"
       }
-    ]
+    ],
+    'react-hooks/rules-of-hooks': 'error', // 检查 Hook 的规则
+    'react-hooks/exhaustive-deps': 'error', // 检查 effect 的依赖
   },
-  overrides: [
-    {
-      files: ['**/*.tsx'],
-      rules: {
-        'react/prop-types': 'off',
-        '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-      },
-    },
-  ],
+  settings:{
+    react: {
+      version: 'detect'
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import styled, { css, keyframes } from 'styled-components';
 
 const rotate = keyframes`
@@ -33,12 +33,12 @@ function Face({
   shouldRotate?: boolean;
 }) {
   return (
-    <FaceWrapper face={face} shouldRotate={shouldRotate}>
+    <FaceWrapper face={face} $shouldRotate={shouldRotate}>
       {face}
     </FaceWrapper>
   );
 }
-const FaceWrapper = styled('div')<{ face: number; shouldRotate?: boolean }>`
+const FaceWrapper = styled('div')<{ face: number; $shouldRotate?: boolean }>`
   position: absolute;
   width: 100%;
   height: 100%;
@@ -49,8 +49,8 @@ const FaceWrapper = styled('div')<{ face: number; shouldRotate?: boolean }>`
   justify-content: center;
   font-size: 30px;
   font-weight: bold;
-  ${({ face, shouldRotate = true }) => {
-    if (!shouldRotate) return '';
+  ${({ face, $shouldRotate = true }) => {
+    if (!$shouldRotate) return '';
     switch (face) {
       case 1:
         return 'transform: rotateY(0deg) translateZ(25px);';
@@ -79,17 +79,23 @@ export function Dice({
   targetPoint: number;
   onAnimationEnd: () => void;
 }) {
+  const [innerRolling, setInnerRolling] = useState(true);
+
   useEffect(() => {
     if (rolling) {
       const timer = setTimeout(() => {
-        onAnimationEnd();
+        setInnerRolling(false);
+
+        setTimeout(() => {
+          onAnimationEnd();
+        }, 1000);
       }, 2000);
       return () => clearTimeout(timer);
     }
-  }, [rolling, targetPoint, onAnimationEnd]);
+  }, [rolling, onAnimationEnd]);
 
-  return rolling ? (
-    <DiceWrapper $rolling={rolling}>
+  return innerRolling ? (
+    <DiceWrapper $rolling={innerRolling}>
       <Face face={1} />
       <Face face={2} />
       <Face face={3} />
