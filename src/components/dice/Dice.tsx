@@ -1,12 +1,5 @@
 import { useEffect } from 'react';
-import styled, { keyframes, css } from 'styled-components';
-
-const DiceContainer = styled('div')`
-  width: 50px;
-  height: 50px;
-  margin: 20px auto;
-  perspective: 1000px;
-`;
+import styled, { css, keyframes } from 'styled-components';
 
 const rotate = keyframes`
     0% { transform: rotateX(0) rotateY(0); }
@@ -32,6 +25,19 @@ const DiceWrapper = styled('div')<{
       : 'none'};
 `;
 
+function Face({
+  face,
+  shouldRotate = true,
+}: {
+  face: number;
+  shouldRotate?: boolean;
+}) {
+  return (
+    <FaceWrapper face={face} shouldRotate={shouldRotate}>
+      {face}
+    </FaceWrapper>
+  );
+}
 const FaceWrapper = styled('div')<{ face: number; shouldRotate?: boolean }>`
   position: absolute;
   width: 100%;
@@ -64,21 +70,7 @@ const FaceWrapper = styled('div')<{ face: number; shouldRotate?: boolean }>`
   }}
 `;
 
-function Face({
-  face,
-  shouldRotate = true,
-}: {
-  face: number;
-  shouldRotate?: boolean;
-}) {
-  return (
-    <FaceWrapper face={face} shouldRotate={shouldRotate}>
-      {face}
-    </FaceWrapper>
-  );
-}
-
-function Dice({
+export function Dice({
   rolling,
   targetPoint,
   onAnimationEnd,
@@ -107,25 +99,5 @@ function Dice({
     </DiceWrapper>
   ) : (
     <Face face={targetPoint} shouldRotate={false} />
-  );
-}
-
-export function DiceRoller({
-  rolling,
-  targetPoint,
-  onAnimationEnd,
-}: {
-  rolling: boolean;
-  targetPoint: number;
-  onAnimationEnd: () => void;
-}) {
-  return (
-    <DiceContainer>
-      <Dice
-        rolling={rolling}
-        targetPoint={targetPoint}
-        onAnimationEnd={onAnimationEnd}
-      />
-    </DiceContainer>
   );
 }

@@ -15,7 +15,7 @@ import {
 import { useOwnedCountriesStore } from './store/ownedCountriesStore.ts';
 import { useRef, useState } from 'react';
 import { CountryChain } from './model/CountryChain.ts';
-import { DiceRoller } from './components/DiceRoller.tsx';
+import { DiceRoller } from './components/dice/DiceRoller.tsx';
 
 const GameWrapper = styled('div')`
   height: 100%;
@@ -107,7 +107,7 @@ function App() {
           setRolling(false);
           void start();
         }}
-      ></DiceRoller>
+      />
       <GameWrapper>
         <Board
           players={players}
