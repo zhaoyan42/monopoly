@@ -1,5 +1,6 @@
 import styled from 'styled-components';
-import { Dice } from './Dice.tsx';
+import { DiceAnimation } from './DiceAnimation.tsx';
+import { useEffect, useState } from 'react';
 
 const DiceContainer = styled('div')`
   width: 50px;
@@ -9,21 +10,22 @@ const DiceContainer = styled('div')`
 `;
 
 export function DiceRoller({
-  rolling,
-  targetPoint,
-  onAnimationEnd,
+  onSettled,
 }: {
-  rolling: boolean;
-  targetPoint: number;
-  onAnimationEnd: () => void;
+  onSettled: (steps: number) => void;
 }) {
+  const [points] = useState(Math.floor(Math.random() * 6) + 1);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      onSettled(points);
+    }, 3000);
+    return () => clearTimeout(timeout);
+  });
+
   return (
     <DiceContainer>
-      <Dice
-        rolling={rolling}
-        targetPoint={targetPoint}
-        onAnimationEnd={onAnimationEnd}
-      />
+      <DiceAnimation targetPoint={points} />
     </DiceContainer>
   );
 }

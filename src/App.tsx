@@ -27,6 +27,8 @@ const GameWrapper = styled('div')`
 function App() {
   const countryChain = useRef(new CountryChain(countryList));
 
+  const [rolling, setRolling] = useState(false);
+
   const { ConfirmComponent } = useConfirm();
   const { AlertComponent } = useAlert();
 
@@ -38,26 +40,22 @@ function App() {
 
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
 
-  const [points, setPoints] = useState(0);
-  const [rolling, setRolling] = useState(false);
-
   const { confirm } = useConfirm();
   const { alert } = useAlert();
   const { purchaseCountry, isCountryPurchased, getOwner } =
     useOwnedCountriesStore();
 
-  function rollDice() {
-    setPoints(Math.floor(Math.random() * 6) + 1);
+  function roll() {
     setRolling(true);
   }
 
-  async function start() {
+  async function go(steps: number) {
     const currentPlayer = players[currentPlayerIndex];
-    console.log(`%c${points}`, `color: ${currentPlayer.color};`);
+    console.log(`%c${steps}`, `color: ${currentPlayer.color};`);
 
     const targetCountry = countryChain.current.getTargetCountry(
       currentPlayer.country,
-      points,
+      steps,
     );
     setPlayers((draft) => {
       draft[currentPlayerIndex].country = targetCountry;
@@ -102,11 +100,9 @@ function App() {
     <>
       {rolling ? (
         <DiceRoller
-          rolling={rolling}
-          targetPoint={points}
-          onAnimationEnd={() => {
+          onSettled={(points) => {
             setRolling(false);
-            void start();
+            void go(points);
           }}
         />
       ) : null}
@@ -114,7 +110,7 @@ function App() {
         <Board
           players={players}
           currentPlayerIndex={currentPlayerIndex}
-          onClick={rollDice}
+          onClick={roll}
         />
       </GameWrapper>
       <ConfirmComponent />

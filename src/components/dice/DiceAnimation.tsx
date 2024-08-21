@@ -70,29 +70,15 @@ const FaceWrapper = styled('div')<{ face: number; $shouldRotate?: boolean }>`
   }}
 `;
 
-export function Dice({
-  rolling,
-  targetPoint,
-  onAnimationEnd,
-}: {
-  rolling: boolean;
-  targetPoint: number;
-  onAnimationEnd: () => void;
-}) {
+export function DiceAnimation({ targetPoint }: { targetPoint: number }) {
   const [innerRolling, setInnerRolling] = useState(true);
 
   useEffect(() => {
-    if (rolling) {
-      const timer = setTimeout(() => {
-        setInnerRolling(false);
-
-        setTimeout(() => {
-          onAnimationEnd();
-        }, 1000);
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [rolling, onAnimationEnd]);
+    const timer = setTimeout(() => {
+      setInnerRolling(false);
+    }, 2000);
+    return () => clearTimeout(timer);
+  });
 
   return innerRolling ? (
     <DiceWrapper $rolling={innerRolling}>
