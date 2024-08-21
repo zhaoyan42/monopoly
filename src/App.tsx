@@ -106,6 +106,8 @@ function App() {
           }}
         />
       ) : null}
+      <ConfirmComponent />
+      <AlertComponent />
       <GameWrapper>
         <Board
           players={players}
@@ -113,8 +115,6 @@ function App() {
           onClick={roll}
         />
       </GameWrapper>
-      <ConfirmComponent />
-      <AlertComponent />
     </>
   );
 }

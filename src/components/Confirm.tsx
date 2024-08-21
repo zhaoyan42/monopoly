@@ -1,17 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-
-const Overlay = styled('div')<{ $visible: boolean }>`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: ${({ $visible }) => ($visible ? 'grid' : 'none')};
-  place-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: #000000;
-`;
+import { Overlay } from './Overlay.tsx';
 
 const DialogWrapper = styled('div')`
   background-color: #ffffff;
@@ -66,18 +55,20 @@ export function Confirm({
   onCancel: () => void;
 }) {
   return (
-    <Overlay $visible={visible}>
-      <DialogWrapper>
-        <DialogCard>
-          <ContentWrapper>{children}</ContentWrapper>
-          <Actions>
-            <Button $primary={true} onClick={onConfirm}>
-              {confirmText}
-            </Button>
-            <Button onClick={onCancel}>{cancelText}</Button>
-          </Actions>
-        </DialogCard>
-      </DialogWrapper>
-    </Overlay>
+    visible && (
+      <Overlay>
+        <DialogWrapper>
+          <DialogCard>
+            <ContentWrapper>{children}</ContentWrapper>
+            <Actions>
+              <Button $primary={true} onClick={onConfirm}>
+                {confirmText}
+              </Button>
+              <Button onClick={onCancel}>{cancelText}</Button>
+            </Actions>
+          </DialogCard>
+        </DialogWrapper>
+      </Overlay>
+    )
   );
 }
