@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 import { DiceAnimation } from './DiceAnimation.tsx';
 import { useEffect, useState } from 'react';
+import { Overlay } from '../Overlay.tsx';
 
 const DiceContainer = styled('div')`
   width: 50px;
@@ -24,8 +25,10 @@ export function DiceRoller({
   });
 
   return (
-    <DiceContainer>
-      <DiceAnimation targetPoint={points} />
-    </DiceContainer>
+    <Overlay>
+      <DiceContainer>
+        <DiceAnimation targetPoint={points} />
+      </DiceContainer>
+    </Overlay>
   );
 }
